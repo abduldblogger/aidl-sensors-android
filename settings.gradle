@@ -1,0 +1,3 @@
+include ':sensors'
+include ':app'
+rootProject.name = "AIDL"
