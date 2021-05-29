@@ -10,11 +10,7 @@
         <service
             android:name=".service.SensorService"
             android:exported="true"
-            android:label="Testing..."
-            tools:ignore="ExportedService">
-            <intent-filter>
-                <action android:name="MyCompanyRequestService" />
-            </intent-filter>
-        </service>
+            android:label="@string/app_name"
+            tools:ignore="ExportedService" />
     </application>
 </manifest>

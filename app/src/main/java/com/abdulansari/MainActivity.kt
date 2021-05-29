@@ -4,7 +4,6 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.os.RemoteException
@@ -24,20 +23,10 @@ class MainActivity : AppCompatActivity() {
         val serviceIntent = Intent()
             .setComponent(
                 ComponentName(
-                    "com.abdulansari.service",
+                    "com.abdulansari",
                     "com.abdulansari.service.SensorService"
                 )
             )
-//        serviceIntent.action = "MyCompanyRequestService"
-//        serviceIntent.setPackage("com.abdulansari")
-
-        println("Starting service…")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = startForegroundService(serviceIntent)
-            println(name)
-        } else {
-            startService(serviceIntent)
-        }
         println("Binding service…")
         bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
     }
