@@ -3,12 +3,17 @@ package com.abdulansari
 import android.os.Parcel
 import android.os.Parcelable
 
-class SensorData(var orientation: String?) : Parcelable {
-    constructor(parcel: Parcel) : this(parcel.readString()) {
-    }
+class SensorData(var pitch: Float?, var roll: Float?, var azimuth: Float?) : Parcelable {
+    constructor(parcel: Parcel) : this(
+        parcel.readValue(Float::class.java.classLoader) as? Float,
+        parcel.readValue(Float::class.java.classLoader) as? Float,
+        parcel.readValue(Float::class.java.classLoader) as? Float
+    )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(orientation)
+        parcel.writeValue(pitch)
+        parcel.writeValue(roll)
+        parcel.writeValue(azimuth)
     }
 
     override fun describeContents(): Int {
@@ -24,5 +29,4 @@ class SensorData(var orientation: String?) : Parcelable {
             return arrayOfNulls(size)
         }
     }
-
 }

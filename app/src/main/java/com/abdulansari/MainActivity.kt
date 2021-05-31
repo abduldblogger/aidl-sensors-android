@@ -8,10 +8,12 @@ import android.os.Bundle
 import android.os.IBinder
 import android.os.RemoteException
 import androidx.appcompat.app.AppCompatActivity
+import com.abdulansari.constant.LibConstants
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), IMainServiceCallback {
     private var service: IMainService? = null
+    private var binder: IBinder? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,8 +25,8 @@ class MainActivity : AppCompatActivity() {
         val serviceIntent = Intent()
             .setComponent(
                 ComponentName(
-                    "com.abdulansari",
-                    "com.abdulansari.service.SensorService"
+                    LibConstants.SERVICE_PACKAGE_NAME,
+                    LibConstants.SERVICE_CLASS_NAME
                 )
             )
         println("Binding service…")
@@ -38,6 +40,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onServiceConnected(componentName: ComponentName?, binder: IBinder?) {
+            this@MainActivity.binder = binder
             println("Service binded")
             service = IMainService.Stub.asInterface(binder)
             populateData()
@@ -46,8 +49,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun populateData() {
         try {
-            val data = service?.registerOrientationData()
-            activity_main_tv_sensor_data?.text = data?.orientation
+            service?.registerOrientationData(this)
         } catch (re: RemoteException) {
             println(re.printStackTrace())
         }
@@ -56,5 +58,15 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         service?.unregisterOrientationData()
+    }
+
+    override fun asBinder(): IBinder? {
+        return binder
+    }
+
+    override fun onUpdateValue(sensorData: SensorData) {
+        activity_main_tv_sensor_data?.text =
+            "Rotation vector data: pitch -> ${sensorData.pitch} \n " +
+                    "roll -> ${sensorData.roll} \n azimuth-> ${sensorData.azimuth}"
     }
 }

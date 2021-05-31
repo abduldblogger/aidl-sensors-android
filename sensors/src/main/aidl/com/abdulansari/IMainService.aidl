@@ -1,8 +1,8 @@
 package com.abdulansari;
-import com.abdulansari.SensorData;
+import com.abdulansari.IMainServiceCallback;
 
 interface IMainService {
-    SensorData registerOrientationData();
+    void registerOrientationData(IMainServiceCallback callback);
 
     void unregisterOrientationData();
 }
